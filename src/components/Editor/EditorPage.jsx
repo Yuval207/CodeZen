@@ -21,7 +21,7 @@ const EditorPage = () => {
       {/* Topbar ends */}
       <div className="flex">
         <Split className="flex">
-          <ProblemDescription />
+          <ProblemDescription id={"65f83c2d9153d14c61eaf1bb"} />
           <div className="w-1/2 h-full">
             <Editor
               theme="vs-dark"
