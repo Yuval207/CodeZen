@@ -1,4 +1,5 @@
 const problemList = require("../models/problemList");
+const { exec } = require("child_process");
 const problemDescription = require("../models/problemDescription");
 
 const handleGetProblemList = async (req, res) => {
@@ -52,9 +53,23 @@ const handleGenerateProblemDesc = async (req, res) => {
     });
 };
 
+const executePy = (req, res) => {
+  const body = req.body;
+
+  const filepath = body.filepath;
+  exec(`python3 ${filepath}`, (error, stdout, stderr) => {
+    if (error) {
+      res.status(500).json({ error: error.message, stderr });
+      return;
+    }
+    res.status(200).json({ stdout });
+  });
+};
+
 module.exports = {
   handleGetProblemList,
   handleGenerateProblemList,
   handleGenerateProblemDesc,
   handleGetProblemDesc,
+  executePy,
 };
