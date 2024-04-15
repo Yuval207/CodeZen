@@ -66,10 +66,30 @@ const executePy = (req, res) => {
   });
 };
 
+const testcase_temp = async (req, res) => {
+  const body = req.body;
+  await problemDescription
+    .updateOne(
+      { _id: body.id },
+      {
+        testcase: body.testcase,
+      }
+    )
+    .then(() => {
+      console.log("data updated");
+      return res.json({ message: "Data updated :)" });
+    })
+    .catch((err) => {
+      console.log("data creation error: ", err);
+      return res.status(500).json({ error: "Internal Servor error!" });
+    });
+};
+
 module.exports = {
   handleGetProblemList,
   handleGenerateProblemList,
   handleGenerateProblemDesc,
   handleGetProblemDesc,
   executePy,
+  testcase_temp,
 };
