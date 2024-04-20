@@ -7,6 +7,7 @@ const {
   handleGetProblemDesc,
   executePy,
   testcase_temp,
+  getCode,
 } = require("../controller/controllers.js");
 
 router.route("/").post(handleGenerateProblemList);
@@ -16,5 +17,6 @@ router.route("/problemdescription").post(handleGenerateProblemDesc);
 router.route("/problemdescription/:id").get(handleGetProblemDesc);
 router.route("/runprogramPy").post(executePy);
 router.route("/testcase").post(testcase_temp);
+router.route("/code/:id").get(getCode);
 
 module.exports = router;

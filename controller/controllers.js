@@ -1,6 +1,8 @@
 const problemList = require("../models/problemList");
 const { exec } = require("child_process");
 const problemDescription = require("../models/problemDescription");
+const fs = require("fs");
+const mongoose = require("mongoose");
 
 const handleGetProblemList = async (req, res) => {
   const data = await problemList.find({});
@@ -85,6 +87,25 @@ const testcase_temp = async (req, res) => {
     });
 };
 
+const getCode = async (req, res) => {
+  const id = req.params.id;
+  // console.log(id);
+  const problem = await problemDescription.findOne({
+    id: id,
+  });
+  console.log(problem);
+  return new Promise((resolve, reject) => {
+    fs.readFile(problem.filepath, "utf8", (err, data) => {
+      if (err) {
+        reject(err);
+        return res.json({ error: err });
+      }
+      resolve(data);
+      return res.json({ data });
+    });
+  });
+};
+
 module.exports = {
   handleGetProblemList,
   handleGenerateProblemList,
@@ -92,4 +113,5 @@ module.exports = {
   handleGetProblemDesc,
   executePy,
   testcase_temp,
+  getCode,
 };

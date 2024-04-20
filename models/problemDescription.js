@@ -22,6 +22,10 @@ const schema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  filepath: {
+    type: String,
+    required: true,
+  },
 });
 
 const problemDescription = mongoose.model("problemDescription", schema);
