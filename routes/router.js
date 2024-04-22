@@ -15,7 +15,7 @@ router.route("/problemlist").get(handleGetProblemList);
 
 router.route("/problemdescription").post(handleGenerateProblemDesc);
 router.route("/problemdescription/:id").get(handleGetProblemDesc);
-router.route("/runprogramPy").post(executePy);
+router.route("/runprogrampy").post(executePy);
 router.route("/testcase").post(testcase_temp);
 router.route("/code/:id").get(getCode);
 

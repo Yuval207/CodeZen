@@ -3,6 +3,7 @@ const { exec } = require("child_process");
 const problemDescription = require("../models/problemDescription");
 const fs = require("fs");
 const mongoose = require("mongoose");
+const docker_delete = require("../utils/docker_delete");
 
 const handleGetProblemList = async (req, res) => {
   const data = await problemList.find({});
@@ -55,16 +56,52 @@ const handleGenerateProblemDesc = async (req, res) => {
     });
 };
 
-const executePy = (req, res) => {
+const executePy = async (req, res) => {
   const body = req.body;
+  const user_id = body.user_id;
 
-  const filepath = body.filepath;
-  exec(`python3 ${filepath}`, (error, stdout, stderr) => {
-    if (error) {
-      res.status(500).json({ error: error.message, stderr });
-      return;
+  // Build the Docker image
+  exec(`docker build -t coderunner_${user_id} .`, (error, stderr, stdout) => {
+    if (error || stderr) {
+      return res.status(500).json({
+        command: "build error",
+        error: error ? error.message : "",
+        stderr: stderr || "",
+      });
     }
-    res.status(200).json({ stdout });
+
+    // Run the Docker container
+    exec(
+      `docker run --name coderunner_${user_id} coderunner_${user_id}`,
+      (runError, runStderr, runStdout) => {
+        if (runError) {
+          return res.status(500).json({
+            command: "run error",
+            error: runError.message,
+            stderr: runStderr,
+          });
+        }
+
+        // Get logs from the container
+        exec(
+          `docker logs coderunner_${user_id}`,
+          (logsError, logsStderr, logsStdout) => {
+            if (logsError) {
+              return res.status(500).json({
+                command: "logging error",
+                error: logsError.message,
+                stderr: logsStderr,
+              });
+            }
+            // Return the logs
+            docker_delete(user_id, req, res);
+
+            res.status(200).json({ stderr: logsStderr });
+            return;
+          }
+        );
+      }
+    );
   });
 };
 
