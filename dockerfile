@@ -14,6 +14,5 @@ COPY problems/two_sum_test.py /code
 # RUN pip install --no-cache-dir -r requirements.txt
 
 # Run two_sum_test.py when the container launches
-EXPOSE 8000
 WORKDIR /code
 CMD ["python", "two_sum_test.py"]
