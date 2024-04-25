@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 import Split from "react-split";
 import ProblemDescription from "./ProblemDescription";
 import "./EditorPage.css";
-import { getProblemDescription, getCode } from "../../api/index.js";
+import { getProblemDescription, getCode, runProgram } from "../../api/index.js";
 
 const EditorPage = () => {
   const [language, setLanguage] = useState("python");
@@ -13,6 +13,15 @@ const EditorPage = () => {
     setLanguage(e.target.value);
   };
 
+  const handleRunProgram = (user_id) => {
+    runProgram(user_id)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const [data, setData] = useState(null);
   useEffect(() => {
     getProblemDescription("65f83c2d9153d14c61eaf1bb").then((problems) =>
@@ -44,7 +53,14 @@ const EditorPage = () => {
           <option value="javascript">JavaScript</option>
           <option value="python">Python</option>
         </select>
-        <button>Run</button>
+        <button
+          onClick={() => {
+            handleRunProgram(101);
+          }}
+        >
+          Run
+        </button>
+        <button>Submit</button>
       </div>
       {/* Topbar ends */}
       <div className="flex">

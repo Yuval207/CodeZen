@@ -21,3 +21,17 @@ export const getCode = async (id) => {
   });
   return await response.json();
 };
+
+export const runProgram = async (user_id) => {
+  const payload = {
+    user_id: user_id,
+  };
+  const response = await fetch(`http://localhost:3000/runprogrampy`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  return await response.json();
+};
