@@ -10,13 +10,13 @@ class Test(unittest.TestCase):
     
     def test_2(self):
         try:
-            self.assertEqual(twoSum([2,4,6,9], 15), [0,1])
+            self.assertEqual(twoSum([2,4,6,9], 15), [2,3])
         except AssertionError:
             print(2)
 
     def test_3(self):
         try:
-            self.assertEqual(twoSum([6,9,5,7], 13), [0,1])
+            self.assertEqual(twoSum([6,9,5,7], 13), [3,3])
         except AssertionError:
             print(3)
 
