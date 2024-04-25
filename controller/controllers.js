@@ -34,7 +34,6 @@ const handleGenerateProblemList = async (req, res) => {
 
 const handleGetProblemDesc = async (req, res) => {
   const id = req.params.id;
-  console.log(id);
   const data = await problemDescription.findOne({ id: id });
   res.send(data);
 };
@@ -85,66 +84,6 @@ async function executePy(req, res) {
   }
 }
 
-// const executePy = async (req, res) => {
-//   const body = req.body;
-//   const user_id = body.user_id;
-
-//   // Build the Docker image
-//   const { error, stdout, stderr } = await execPromise(
-//     `docker build -t coderunner_${user_id} .`
-//   );
-//   if (error || stderr) {
-//     return res.status(500).json({
-//       command: "build error",
-//       error: error ? error.message : "",
-//       stderr: stderr || "",
-//     });
-
-//   }
-//   exec(`docker build -t coderunner_${user_id} .`, (error, stderr, stdout) => {
-//     if (error || stderr) {
-//       return res.status(500).json({
-//         command: "build error",
-//         error: error ? error.message : "",
-//         stderr: stderr || "",
-//       });
-//     }
-
-//     // Run the Docker container
-//     exec(
-//       `docker run --name coderunner_${user_id} coderunner_${user_id}`,
-//       (runError, runStderr, runStdout) => {
-//         if (runError) {
-//           return res.status(500).json({
-//             command: "run error",
-//             error: runError.message,
-//             stderr: runStderr,
-//           });
-//         }
-
-//         // Get logs from the container
-//         exec(
-//           `docker logs coderunner_${user_id}`,
-//           (logsError, logsStderr, logsStdout) => {
-//             if (logsError) {
-//               return res.status(500).json({
-//                 command: "logging error",
-//                 error: logsError.message,
-//                 stderr: logsStderr,
-//               });
-//             }
-//             // Return the logs
-//             docker_delete(user_id, req, res);
-
-//             res.status(200).json({ stderr: logsStderr });
-//             return;
-//           }
-//         );
-//       }
-//     );
-//   });
-// };
-
 const testcase_temp = async (req, res) => {
   const body = req.body;
   await problemDescription
@@ -166,11 +105,9 @@ const testcase_temp = async (req, res) => {
 
 const getCode = async (req, res) => {
   const id = req.params.id;
-  // console.log(id);
   const problem = await problemDescription.findOne({
     id: id,
   });
-  console.log(problem);
   return new Promise((resolve, reject) => {
     fs.readFile(problem.filepath, "utf8", (err, data) => {
       if (err) {
