@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Editor } from "@monaco-editor/react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import Split from "react-split";
 import ProblemDescription from "./ProblemDescription";
 import "./EditorPage.css";
@@ -8,13 +8,16 @@ import { getProblemDescription, getCode, runProgram } from "../../api/index.js";
 
 const EditorPage = () => {
   const [language, setLanguage] = useState("python");
+  const params = useParams();
+  const problem_id = params.id;
 
   const handleLanguageChange = (e) => {
     setLanguage(e.target.value);
   };
 
   const handleRunProgram = (user_id) => {
-    runProgram(user_id)
+    console.log(code);
+    runProgram(user_id, code, problem_id)
       .then((res) => {
         console.log(res);
       })
@@ -30,14 +33,19 @@ const EditorPage = () => {
     console.log(data);
   }, []);
 
+  const handleEditorChange = (value, event) => {
+    setCode(value);
+  };
+
   const [code, setCode] = useState("");
   useEffect(() => {
     getCode("65f83c2d9153d14c61eaf1bb").then((e) => setCode(e.data));
+    console.log(code);
   }, []);
 
-  useEffect(() => {
-    console.log(language);
-  }, [language]);
+  // useEffect(() => {
+  //   console.log(language);
+  // }, [language]);
 
   return (
     <div className="flex flex-col h-screen bg-black">
@@ -72,6 +80,7 @@ const EditorPage = () => {
               height="100%"
               defaultLanguage={language}
               defaultValue={code}
+              onChange={handleEditorChange}
             />
           </div>
         </Split>
