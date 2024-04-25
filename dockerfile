@@ -5,8 +5,7 @@ FROM python:3.9-slim
 WORKDIR /code
 
 # Copy the Python files into the container at /app
-COPY problems/two_sum.py /code
-COPY problems/two_sum_test.py /code
+COPY solution/* /code
 
 # Install any needed dependencies specified in requirements.txt
 # If you have any requirements, uncomment the line below and place your requirements.txt file in the same directory as the Dockerfile
@@ -15,4 +14,4 @@ COPY problems/two_sum_test.py /code
 
 # Run two_sum_test.py when the container launches
 WORKDIR /code
-CMD ["python", "two_sum_test.py"]
+CMD ["python", "solution_test.py"]

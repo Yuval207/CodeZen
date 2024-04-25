@@ -61,6 +61,42 @@ const handleGenerateProblemDesc = async (req, res) => {
 async function executePy(req, res) {
   const body = req.body;
   const user_id = body.user_id;
+  const code = body.code;
+  const problem_id = body.problem_id;
+
+  //Code copying
+  const sourceFilePath = `/Users/yuvalsharma/Desktop/webdev/CodeZen/backend/problems/${problem_id}_test.py`;
+
+  const destinationFilePath =
+    "/Users/yuvalsharma/Desktop/webdev/CodeZen/backend/solution/solution_test.py";
+
+  fs.readFile(sourceFilePath, "utf8", (err, data) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+
+    fs.writeFile(destinationFilePath, data, (err) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      console.log("Test code copied successfully");
+    });
+  });
+
+  //writing code from client
+  const filePath =
+    "/Users/yuvalsharma/Desktop/webdev/CodeZen/backend/solution/solution.py";
+
+  fs.writeFile(filePath, code, (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    console.log("Solution code written successfully!");
+  });
+
   // Build Docker image
   try {
     await execPromise(`docker build -t coderunner_${user_id} .`);
