@@ -10,7 +10,7 @@ const ProblemDescription = (props) => {
   useEffect(() => {
     getProblemDescription(props.id).then((problems) => setData(problems));
 
-    console.log(data);
+    // console.log(data);
   }, []);
   return (
     <>
