@@ -113,10 +113,13 @@ async function executePy(req, res) {
     );
     console.log("container ran");
     docker_delete(user_id);
-    return res.status(200).json({ error: run.stdout });
+    if (run.stdout) {
+      return res.status(200).json({ output: run.stdout });
+    }
   } catch (error) {
-    console.log("error in run: ", error);
-    return res.status(500).send("Internal Server Error");
+    console.log("error in run: \n\n\n", error);
+    docker_delete(user_id);
+    return res.status(500).send({ major_error: error.stderr });
   }
 }
 

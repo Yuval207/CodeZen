@@ -4,7 +4,7 @@ import unittest
 class Test(unittest.TestCase):
     def test_1(self):
         try:
-            self.assertEqual(solution([1,2,3,4], 7), [1,3])
+            self.assertEqual(solution([1,2,3,4], 7), [2,3])
         except AssertionError:
             print(1)
     
