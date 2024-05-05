@@ -1,7 +1,7 @@
 const { exec } = require("child_process");
 
 const docker_delete = (user_id) => {
-  exec(`docker rm coderunner_${user_id}`, (error, stderr, stdout) => {
+  exec(`docker rm -f coderunner_${user_id}`, (error, stderr, stdout) => {
     if (error) {
       console.log("container deletion error\n");
       console.log({ error: error || "None" });
