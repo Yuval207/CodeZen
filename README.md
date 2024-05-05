@@ -1,6 +1,6 @@
-### A full blown Leetcode clone backend
+## A full blown Leetcode clone backend
 
-## How to run this
+### How to run this
 
 1. Clone the repository
 2. Install dependencies - npm install
