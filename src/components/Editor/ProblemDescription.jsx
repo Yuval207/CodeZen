@@ -7,14 +7,13 @@ import { useState, useEffect } from "react";
 
 const ProblemDescription = (props) => {
   const [data, setData] = useState(null);
-  const [testcase, setTestcase] = useState([]);
+
   const [istestcase, setIstestcase] = useState(true);
 
   useEffect(() => {
     getProblemDescription(props.id).then((problems) => setData(problems));
-
-    // console.log(data);
   }, []);
+
   return (
     <>
       <Split
@@ -104,14 +103,28 @@ const ProblemDescription = (props) => {
                   <button>Case 2</button>
                   <button>Case 3</button>
                 </div>
-                <p className="mt-5">nums = </p>
-                <div className="mt-2 bg-gray-800 w-full rounded-2xl h-12 p-1 flex pl-4 items-center">
-                  [1,2,3,4,5,6]
-                </div>
-                <p className="mt-5">target = </p>
-                <div className="mt-2 bg-gray-800 w-full rounded-2xl h-12 p-1 flex pl-4 items-center">
-                  5
-                </div>
+
+                {data ? (
+                  data.testcase.map((e) => {
+                    return (
+                      <div>
+                        {Object.keys(e.input).map((key) => {
+                          return (
+                            <div>
+                              <p className="mt-5">{key} = </p>
+                              <div className="mt-2 bg-gray-800 w-full rounded-2xl h-12 p-1 flex pl-4 items-center">
+                                {JSON.stringify(e.input[key])}
+                                {console.log(e.input[key])}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p>Loading...</p>
+                )}
               </div>
             ) : (
               <p>Test Result</p>
