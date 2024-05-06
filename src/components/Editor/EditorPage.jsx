@@ -16,7 +16,6 @@ const EditorPage = () => {
   };
 
   const handleRunProgram = (user_id) => {
-    // console.log(code);
     runProgram(user_id, code, problem_id)
       .then((res) => {
         console.log(res);
@@ -40,7 +39,6 @@ const EditorPage = () => {
   const [code, setCode] = useState("");
   useEffect(() => {
     getCode("65f83c2d9153d14c61eaf1bb").then((e) => setCode(e.data));
-    // console.log(code);
   }, []);
 
   // useEffect(() => {
