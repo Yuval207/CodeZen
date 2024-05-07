@@ -65,10 +65,10 @@ async function executePy(req, res) {
   const problem_id = body.problem_id;
 
   //Code copying
-  const sourceFilePath = `/Users/yuvalsharma/Desktop/webdev/CodeZen/backend/problems/${problem_id}_test.py`;
+  const sourceFilePath = `/Users/yuvalsharma/Desktop/webdev/CodeZen/server/problems/${problem_id}_test.py`;
 
   const destinationFilePath =
-    "/Users/yuvalsharma/Desktop/webdev/CodeZen/backend/solution/solution_test.py";
+    "/Users/yuvalsharma/Desktop/webdev/CodeZen/server/solution/solution_test.py";
 
   fs.readFile(sourceFilePath, "utf8", (err, data) => {
     if (err) {
@@ -87,7 +87,7 @@ async function executePy(req, res) {
 
   //writing code from client
   const filePath =
-    "/Users/yuvalsharma/Desktop/webdev/CodeZen/backend/solution/solution.py";
+    "/Users/yuvalsharma/Desktop/webdev/CodeZen/server/solution/solution.py";
 
   fs.writeFile(filePath, code, (err) => {
     if (err) {
