@@ -6,8 +6,8 @@ CodeZen is a platform for solving Data Structures and Algorithms (DSA) problems.
 
 - **User Authentication**: Users can create an account and log in securely.
 - **Problem Solving**: Users can solve DSA problems with an interactive code editor.
-- **Leaderboard**: A leaderboard to track user progress and rankings based on problem-solving skills.
-- **Community**: A forum for users to discuss problems, solutions, and coding strategies.
+- **Problem Categories**: Categorize DSA problems based on their difficulty level or topic (e.g., arrays, strings, linked lists) to help users easily find problems they want to solve.
+- **Bookmarking**: Allow users to bookmark problems they find interesting or want to revisit later for solving, making it easier for them to track their progress.
 
 ## Setup
 
