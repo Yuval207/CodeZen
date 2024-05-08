@@ -5,8 +5,10 @@ const fs = require("fs");
 const docker_delete = require("../utils/docker_delete");
 const util = require("util");
 const { exec } = require("child_process");
-const { log } = require("console");
+
 const execPromise = util.promisify(exec);
+const path = require("path");
+const baseDir = path.resolve(__dirname, "..");
 
 const handleGetProblemList = async (req, res) => {
   const data = await problemList.find({});
@@ -65,10 +67,17 @@ async function executePy(req, res) {
   const problem_id = body.problem_id;
 
   //Code copying
-  const sourceFilePath = `/Users/yuvalsharma/Desktop/webdev/CodeZen/server/problems/${problem_id}_test.py`;
+  const sourceFilePath = path.join(
+    baseDir,
+    "problems",
+    `${problem_id}_test.py`
+  );
 
-  const destinationFilePath =
-    "/Users/yuvalsharma/Desktop/webdev/CodeZen/server/solution/solution_test.py";
+  const destinationFilePath = path.join(
+    baseDir,
+    "solution",
+    "solution_test.py"
+  );
 
   fs.readFile(sourceFilePath, "utf8", (err, data) => {
     if (err) {
@@ -86,8 +95,7 @@ async function executePy(req, res) {
   });
 
   //writing code from client
-  const filePath =
-    "/Users/yuvalsharma/Desktop/webdev/CodeZen/server/solution/solution.py";
+  const filePath = path.join(baseDir, "solution", "solution.py");
 
   fs.writeFile(filePath, code, (err) => {
     if (err) {
