@@ -15,6 +15,7 @@ CodeZen is a platform for solving Data Structures and Algorithms (DSA) problems.
 
 - Node.js installed on your machine
 - MongoDB installed locally or a cloud-based MongoDB service (e.g., MongoDB Atlas)
+- Docker installed locally on your machine.
 
 ### Installation
 
