@@ -72,11 +72,7 @@ async function executePy(req, res) {
     `${problem_id}_test.py`
   );
 
-  const starterCodePath = path.join(
-    baseDir,
-    "problems",
-    "starter_code.py"
-  );
+  const starterCodePath = path.join(baseDir, "problems", "starter_code.py");
 
   const destinationFilePath = path.join(
     baseDir,
@@ -99,7 +95,6 @@ async function executePy(req, res) {
     });
   });
 
-  
   const solution_filePath = path.join(baseDir, "solution", "solution.py");
   //writing starter code first and then appending the solution code
   fs.readFile(starterCodePath, "utf8", (err, starter_code) => {
@@ -135,9 +130,9 @@ async function executePy(req, res) {
 
   //writing testcases into testcases.json from database
   const testcase_filePath = path.join(baseDir, "solution", "testcases.json");
-  let problem_data = await problemDescription.findOne({ id: problem_id })
+  let problem_data = await problemDescription.findOne({ id: problem_id });
 
-  let testcases = JSON.stringify(problem_data.testcase)
+  let testcases = JSON.stringify(problem_data.testcase);
   fs.writeFile(testcase_filePath, testcases, (err) => {
     if (err) {
       console.error(err);
@@ -162,9 +157,7 @@ async function executePy(req, res) {
     );
     console.log("container ran");
 
-    const logs = await execPromise(
-      `docker logs coderunner_${user_id}`
-    );
+    const logs = await execPromise(`docker logs coderunner_${user_id}`);
 
     console.log("container logs fetched");
 
@@ -186,7 +179,8 @@ async function executePy(req, res) {
         .json({ success: false, stdout: "Time Limit Exceeded" });
     } else if (error.message.includes("AssertionError")) {
       const case_start =
-        error.message.indexOf("case=>", error.message.indexOf("case=>") + 1) + 6;
+        error.message.indexOf("case=>", error.message.indexOf("case=>") + 1) +
+        6;
       const case_end = error.message.indexOf(
         "expected=>",
         error.message.indexOf("expected=>") + 1
@@ -203,7 +197,8 @@ async function executePy(req, res) {
       );
 
       const result_start =
-        error.message.indexOf("Output", error.message.indexOf("Output=>") + 1) + 8;
+        error.message.indexOf("Output", error.message.indexOf("Output=>") + 1) +
+        8;
       const result_end = error.message.indexOf(
         "!!!!!",
         error.message.indexOf("!!!!!") + 1
@@ -221,22 +216,52 @@ async function executePy(req, res) {
         output,
       });
     } else {
-      const startsFrom = error.message.indexOf(`File "/meetcode/Solution.py"`);
+      const lines = error.message.split("\n");
 
-      const startsEnd =
-        error.message.indexOf(
-          `-----`,
-          error.message.indexOf("Traceback") + 1
-        ) === -1
-          ? error.message.length
-          : error.message.indexOf(
-              `-------`,
-              error.message.indexOf("Traceback") + 1
-            );
+      // Find the index of the line that contains 'File "/code/solution.py"'
+      const fileLineIndex = lines.findIndex((line) =>
+        line.includes('File "/code/solution.py"')
+      );
 
-      const message = error.message.substring(startsFrom, startsEnd);
+      // Extract the line number and subtract 5
+      const fileLine = lines[fileLineIndex];
+      const lineNumberMatch = fileLine.match(/line (\d+)/); // Extract the line number
+      const adjustedLineNumber = lineNumberMatch
+        ? parseInt(lineNumberMatch[1]) - 6
+        : null;
+
+      // Collect the subsequent lines (e.g., code snippet and error message)
+      const relevantLines = lines
+        .slice(fileLineIndex + 1, fileLineIndex + 4)
+        .join("\n"); // Adjust number of lines as needed
+
+      // Construct the final output
+      const message = adjustedLineNumber
+        ? `line ${adjustedLineNumber}\n${relevantLines}`
+        : relevantLines;
+
       console.log(message);
-      return res.status(301).json({ success: false, stdout: message });
+
+      // const startsFrom =
+      //   error.message.indexOf(`File "/code/solution.py"`) +
+      //   `File "/code/solution.py"`.length;
+
+      // const startsEnd =
+      //   error.message.indexOf(
+      //     `-----`,
+      //     error.message.indexOf("Traceback") + 1
+      //   ) === -1
+      //     ? error.message.length
+      //     : error.message.indexOf(
+      //         `-------`,
+      //         error.message.indexOf("Traceback") + 1
+      //       );
+
+      // const message = error.message.substring(startsFrom, startsEnd);
+      console.log(message);
+      return res
+        .status(301)
+        .json({ success: false, errorType: "other", stdout: message });
     }
   }
 }
@@ -256,7 +281,7 @@ const testcase_temp = async (req, res) => {
     })
     .catch((err) => {
       console.log("data creation error: ", err);
-      return res.status(500).json({ error: "Internal Servor error!" });
+      return res.status(500).json({ error: "Internal Server error!" });
     });
 };
 
