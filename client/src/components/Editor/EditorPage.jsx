@@ -8,6 +8,7 @@ import { getProblemDescription, getCode, runProgram } from "../../api/index.js";
 
 const EditorPage = () => {
   const [language, setLanguage] = useState("python");
+  const [isResult, setResult] = useState(null);
   const params = useParams();
   const problem_id = params.id;
 
@@ -18,9 +19,11 @@ const EditorPage = () => {
   const handleRunProgram = (user_id) => {
     runProgram(user_id, code, problem_id)
       .then((res) => {
+        setResult(res);
         console.log(res);
       })
       .catch((err) => {
+        setResult(err);
         console.log(err);
       });
   };
@@ -66,12 +69,16 @@ const EditorPage = () => {
         >
           Run
         </button>
+
         <button>Submit</button>
       </div>
       {/* Topbar ends */}
       <div className="flex">
         <Split className="flex">
-          <ProblemDescription id={"65f83c2d9153d14c61eaf1bb"} />
+          <ProblemDescription
+            id={"65f83c2d9153d14c61eaf1bb"}
+            isResult={isResult}
+          />
           <div className="w-1/2 h-full">
             <Editor
               theme="vs-dark"

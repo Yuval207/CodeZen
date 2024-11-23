@@ -16,6 +16,12 @@ const ProblemDescription = (props) => {
     getProblemDescription(props.id).then((problems) => setData(problems));
   }, []);
 
+  useEffect(() => {
+    if (props.isResult) {
+      setIstestcase(false);
+    }
+  }, [props.isResult]);
+
   return (
     <>
       <Split
@@ -144,7 +150,25 @@ const ProblemDescription = (props) => {
                 )}
               </div>
             ) : (
-              <p>Test Result</p>
+              <p>
+                {props.isResult ? (
+                  props.isResult.success ? (
+                    <p style={{ color: "green" }}>
+                      Success: All test cases ran SUCCESSFULLY!
+                    </p>
+                  ) : props.isResult.errorType === "other" ? (
+                    <pre style={{ color: "red" }}>
+                      Error: {props.isResult.stdout}
+                    </pre>
+                  ) : props.isResult.errorType === "Assertion" ? (
+                    <div style={{ color: "red" }}>
+                      Error: {props.isResult.testcase}
+                    </div>
+                  ) : null
+                ) : (
+                  <p>No results yet. Run the program to see results.</p>
+                )}
+              </p>
             )}
           </div>
         </div>
