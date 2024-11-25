@@ -153,16 +153,81 @@ const ProblemDescription = (props) => {
               <p>
                 {props.isResult ? (
                   props.isResult.success ? (
-                    <p style={{ color: "green" }}>
-                      Success: All test cases ran SUCCESSFULLY!
-                    </p>
+                    <div className="flex flex-col">
+                      <p className="text-green-500 text-xl font-bold pl-1">
+                        Accepted
+                      </p>
+                      {data ? (
+                        <div className="flex gap-7 mt-3">
+                          {data.testcase.map((e, idx) => (
+                            <button
+                              className={`rounded-xl p-2 ${
+                                idx == selectedTestcase ? "bg-gray-800" : ""
+                              }`}
+                              key={idx}
+                              onClick={() => {
+                                setSelectedTestcase(idx);
+                              }}
+                            >
+                              Case {idx + 1}
+                            </button>
+                          ))}
+                        </div>
+                      ) : (
+                        <p>Loading...</p>
+                      )}
+
+                      {data ? (
+                        data.testcase.map((e, idx) => {
+                          if (selectedTestcase == idx) {
+                            return (
+                              <div>
+                                {Object.keys(e.input).map((key) => {
+                                  return (
+                                    <div>
+                                      <p className="mt-5">{key} = </p>
+                                      <div className="mt-2 bg-gray-800 w-full rounded-2xl h-12 p-1 flex pl-4 items-center">
+                                        {JSON.stringify(e.input[key])}
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            );
+                          }
+                        })
+                      ) : (
+                        <p>Loading...</p>
+                      )}
+                    </div>
                   ) : props.isResult.errorType === "other" ? (
-                    <pre style={{ color: "red" }}>
-                      Error: {props.isResult.stdout}
-                    </pre>
+                    <div>
+                      <p className="text-xl font-bold text-red-600">
+                        Runtime Error
+                      </p>
+                      <div className="bg-red-800 rounded-md bg-opacity-20 p-3 mt-4">
+                        <pre style={{ color: "red" }}>
+                          Error: {props.isResult.stdout}
+                        </pre>
+                      </div>
+                    </div>
                   ) : props.isResult.errorType === "Assertion" ? (
-                    <div style={{ color: "red" }}>
-                      Error: {props.isResult.testcase}
+                    <div>
+                      <p className="font-bold text-red-600 text-xl">
+                        Wrong Answer
+                      </p>
+                      <p className="mt-5">Testcase = </p>
+                      <div className="mt-2 bg-gray-800 w-full rounded-2xl h-12 p-1 flex pl-4 items-center">
+                        {props.isResult.testcase}
+                      </div>
+                      <p className="mt-5">Output = </p>
+                      <div className="mt-2 bg-gray-800 w-full rounded-2xl h-12 p-1 flex pl-4 items-center">
+                        {props.isResult.output}
+                      </div>
+                      <p className="mt-5">Expected = </p>
+                      <div className="mt-2 bg-gray-800 w-full rounded-2xl h-12 p-1 flex pl-4 items-center">
+                        {props.isResult.expected}
+                      </div>
                     </div>
                   ) : null
                 ) : (
