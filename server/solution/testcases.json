@@ -1,0 +1,1 @@
+[{"input":{"nums":[1,2,3,4],"target":7},"output":{"expected":[2,3]}},{"input":{"nums":[2,4,6,9],"target":15},"output":{"expected":[2,3]}},{"input":{"nums":[6,9,5,7],"target":15},"output":{"expected":[0,1]}}]
