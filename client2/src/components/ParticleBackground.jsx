@@ -13,35 +13,35 @@ export default function ParticleBackground() {
       init={particlesInit}
       options={{
         background: {
-          opacity: 0
+          opacity: 0,
         },
         particles: {
           color: {
-            value: "#646cff"
+            value: "#646cff",
           },
           links: {
             color: "#646cff",
             distance: 150,
             enable: true,
             opacity: 0.2,
-            width: 1
+            width: 1,
           },
           move: {
             enable: true,
-            speed: 1
+            speed: 1,
           },
           number: {
-            value: 50
+            value: 50,
           },
           opacity: {
-            value: 0.3
+            value: 0.3,
           },
           size: {
-            value: { min: 1, max: 3 }
-          }
+            value: { min: 1, max: 3 },
+          },
         },
         detectRetina: true,
-        fpsLimit: 120
+        fpsLimit: 120,
       }}
     />
   );

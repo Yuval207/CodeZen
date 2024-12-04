@@ -1,6 +1,6 @@
-import { useRef } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-import { Box } from '@react-three/drei';
+import { useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Box } from "@react-three/drei";
 
 function RotatingCube() {
   const meshRef = useRef();
@@ -11,11 +11,7 @@ function RotatingCube() {
   });
 
   return (
-    <Box
-      ref={meshRef}
-      args={[3, 3, 3]}
-      scale={[1, 1, 1]}
-    >
+    <Box ref={meshRef} args={[3, 3, 3]} scale={[1, 1, 1]}>
       <meshStandardMaterial
         color="#646cff"
         opacity={0.5}

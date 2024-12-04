@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import ThemeToggle from './ThemeToggle';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiMenu, FiX } from "react-icons/fi";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,10 +10,10 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const navItems = [
-    { name: 'Home', path: '/' },
-    { name: 'Problems', path: '/problems' },
-    { name: 'Learn', path: '#' },
-    { name: 'Contest', path: '#' }
+    { name: "Home", path: "/" },
+    { name: "Problems", path: "/problems" },
+    { name: "Learn", path: "#" },
+    { name: "Contest", path: "#" },
   ];
 
   return (
@@ -25,7 +25,10 @@ export default function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             className="flex items-center space-x-4"
           >
-            <Link to="/" className="text-3xl font-bold bg-gradient-to-r from-primary-light to-primary-dark bg-clip-text text-transparent">
+            <Link
+              to="/"
+              className="text-3xl font-bold bg-gradient-to-r from-primary-light to-primary-dark bg-clip-text text-transparent"
+            >
               CodeZen
             </Link>
           </motion.div>
@@ -43,8 +46,8 @@ export default function Navbar() {
                   to={item.path}
                   className={`text-lg transition-colors ${
                     location.pathname === item.path
-                      ? 'text-primary-light'
-                      : 'hover:text-primary-light'
+                      ? "text-primary-light"
+                      : "hover:text-primary-light"
                   }`}
                 >
                   {item.name}
@@ -55,7 +58,7 @@ export default function Navbar() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => navigate('/signin')}
+              onClick={() => navigate("/signin")}
               className="bg-primary-light hover:bg-primary-dark text-white px-6 py-2 rounded-xl
                         font-semibold transition-colors duration-300
                         hover:ring-4 hover:ring-primary-light/30"
@@ -80,7 +83,7 @@ export default function Navbar() {
         {isMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             className="md:hidden bg-white/10 dark:bg-background-dark/10 backdrop-blur-md"
           >
@@ -91,19 +94,19 @@ export default function Navbar() {
                   to={item.path}
                   className={`block text-lg transition-colors ${
                     location.pathname === item.path
-                      ? 'text-primary-light'
-                      : 'hover:text-primary-light'
+                      ? "text-primary-light"
+                      : "hover:text-primary-light"
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              <button 
+              <button
                 className="w-full bg-primary-light hover:bg-primary-dark text-white px-6 py-2 rounded-xl
                           font-semibold transition-colors duration-300"
                 onClick={() => {
-                  navigate('/signin');
+                  navigate("/signin");
                   setIsMenuOpen(false);
                 }}
               >

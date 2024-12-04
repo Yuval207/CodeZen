@@ -1,24 +1,37 @@
-import { useState, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useState, useRef, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import Editor from "@monaco-editor/react";
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiPlay, FiMenu, FiSend, FiHelpCircle, FiSun, FiMoon } from 'react-icons/fi';
-import ParticleBackground from './ParticleBackground';
-import { useNavigate } from 'react-router-dom';
-import { useTheme } from '../hooks/useTheme';
-import { problems } from '../data/problems';
-import TestResults from './TestResults';
-import ProblemDescription from './ProblemDescription';
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FiPlay,
+  FiMenu,
+  FiSend,
+  FiHelpCircle,
+  FiSun,
+  FiMoon,
+} from "react-icons/fi";
+import ParticleBackground from "./ParticleBackground";
+import { useNavigate } from "react-router-dom";
+import { useTheme } from "../hooks/useTheme";
+import { problems } from "../data/problems";
+import { getProblemList } from "../api/index.js";
+import TestResults from "./TestResults";
+import ProblemDescription from "./ProblemDescription";
 
 export default function CodeEditor() {
   const { id } = useParams();
-  const problem = problems.find(p => p.id === parseInt(id)) || problems[0];
+  const problem = problems.find((p) => p.id === parseInt(id)) || problems[0];
   const [code, setCode] = useState(problem.starterCode);
   const [testResults, setTestResults] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
   const testResultsRef = useRef(null);
+  const [problemTitles, setProblemTitles] = useState([]);
+
+  useEffect(() => {
+    getProblemList().then((problems) => setProblemTitles(problems));
+  }, []);
 
   const handleEditorChange = (value) => {
     setCode(value);
@@ -29,14 +42,32 @@ export default function CodeEditor() {
       passed: 2,
       failed: 1,
       results: [
-        { status: 'passed', input: '[2,7,11,15], 9', output: '[0,1]', expected: '[0,1]' },
-        { status: 'passed', input: '[3,2,4], 6', output: '[1,2]', expected: '[1,2]' },
-        { status: 'failed', input: '[3,3], 6', output: '[0,2]', expected: '[0,1]' }
-      ]
+        {
+          status: "passed",
+          input: "[2,7,11,15], 9",
+          output: "[0,1]",
+          expected: "[0,1]",
+        },
+        {
+          status: "passed",
+          input: "[3,2,4], 6",
+          output: "[1,2]",
+          expected: "[1,2]",
+        },
+        {
+          status: "failed",
+          input: "[3,3], 6",
+          output: "[0,2]",
+          expected: "[0,1]",
+        },
+      ],
     });
 
     setTimeout(() => {
-      testResultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      testResultsRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }, 100);
   };
 
@@ -57,9 +88,14 @@ export default function CodeEditor() {
             >
               <FiMenu className="w-6 h-6" />
             </button>
-            <h1 className="text-xl font-bold gradient-text">CodeZen</h1>
+            <Link
+              to="/"
+              className="text-3xl font-bold bg-gradient-to-r from-primary-light to-primary-dark bg-clip-text text-transparent"
+            >
+              CodeZen
+            </Link>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <button
               onClick={runTests}
@@ -70,16 +106,20 @@ export default function CodeEditor() {
               <FiPlay className="w-5 h-5" />
               <span>Run</span>
             </button>
-            
-            <button className="flex items-center space-x-2 px-4 py-2 rounded-lg
+
+            <button
+              className="flex items-center space-x-2 px-4 py-2 rounded-lg
                              bg-green-500 hover:bg-green-600 text-white
-                             transition-colors duration-300">
+                             transition-colors duration-300"
+            >
               <FiSend className="w-5 h-5" />
               <span>Submit</span>
             </button>
-            
-            <button className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800
-                             text-gray-600 dark:text-gray-300 transition-colors">
+
+            <button
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800
+                             text-gray-600 dark:text-gray-300 transition-colors"
+            >
               <FiHelpCircle className="w-6 h-6" />
             </button>
 
@@ -88,7 +128,11 @@ export default function CodeEditor() {
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800
                        text-gray-600 dark:text-gray-300 transition-colors"
             >
-              {isDarkMode ? <FiSun className="w-6 h-6" /> : <FiMoon className="w-6 h-6" />}
+              {isDarkMode ? (
+                <FiSun className="w-6 h-6" />
+              ) : (
+                <FiMoon className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -106,9 +150,9 @@ export default function CodeEditor() {
                      overflow-y-auto"
           >
             <div className="p-4">
-              <h2 className="text-lg font-semibold mb-4">Problems</h2>
+              <h2 className="text-lg font-semibold mt-6 mb-4">Problems</h2>
               <div className="space-y-2">
-                {problems.map((p) => (
+                {problemTitles.map((p) => (
                   <button
                     key={p.id}
                     onClick={() => handleProblemClick(p.id)}
@@ -117,11 +161,15 @@ export default function CodeEditor() {
                   >
                     <div className="flex justify-between items-center">
                       <span className="font-medium">{p.title}</span>
-                      <span className={`text-sm ${
-                        p.difficulty === 'Easy' ? 'text-green-500' :
-                        p.difficulty === 'Medium' ? 'text-yellow-500' :
-                        'text-red-500'
-                      }`}>
+                      <span
+                        className={`text-sm ${
+                          p.difficulty === "Easy"
+                            ? "text-green-500"
+                            : p.difficulty === "Medium"
+                            ? "text-yellow-500"
+                            : "text-red-500"
+                        }`}
+                      >
                         {p.difficulty}
                       </span>
                     </div>
@@ -136,7 +184,7 @@ export default function CodeEditor() {
       {/* Main Content */}
       <div className="pt-16">
         <ParticleBackground />
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 py-8">
             {/* Left Panel - Problem Description */}
@@ -153,17 +201,17 @@ export default function CodeEditor() {
                 <Editor
                   height="100%"
                   defaultLanguage="javascript"
-                  theme={isDarkMode ? 'vs-dark' : 'light'}
+                  theme={isDarkMode ? "vs-dark" : "light"}
                   value={code}
                   onChange={handleEditorChange}
                   options={{
                     minimap: { enabled: false },
                     fontSize: 14,
-                    lineNumbers: 'on',
+                    lineNumbers: "on",
                     roundedSelection: false,
                     scrollBeyondLastLine: false,
                     automaticLayout: true,
-                    padding: { top: 20 }
+                    padding: { top: 20 },
                   }}
                 />
               </div>
