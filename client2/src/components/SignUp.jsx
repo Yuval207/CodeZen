@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import ParticleBackground from './ParticleBackground';
-import { FiUser, FiMail, FiLock } from 'react-icons/fi';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import ParticleBackground from "./ParticleBackground";
+import { FiUser, FiMail, FiLock } from "react-icons/fi";
 
 export default function SignUp() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -18,7 +18,7 @@ export default function SignUp() {
   return (
     <div className="relative min-h-screen flex items-center justify-center pt-20 pb-16">
       <ParticleBackground />
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -26,8 +26,12 @@ export default function SignUp() {
                    rounded-2xl shadow-xl border border-white/20"
       >
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold gradient-text mb-2">Create Account</h2>
-          <p className="text-gray-600 dark:text-gray-400">Join our coding community</p>
+          <h2 className="text-3xl font-bold gradient-text mb-2">
+            Create Account
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Join our coding community
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -123,8 +127,11 @@ export default function SignUp() {
         </form>
 
         <p className="mt-8 text-center text-gray-600 dark:text-gray-400">
-          Already have an account?{' '}
-          <Link to="/signin" className="text-primary-light hover:text-primary-dark font-medium">
+          Already have an account?{" "}
+          <Link
+            to="/signin"
+            className="text-primary-light hover:text-primary-dark font-medium"
+          >
             Sign in
           </Link>
         </p>

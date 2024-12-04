@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import ParticleBackground from './ParticleBackground';
-import { FiMail, FiLock } from 'react-icons/fi';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import ParticleBackground from "./ParticleBackground";
+import { FiMail, FiLock } from "react-icons/fi";
 
 export default function SignIn() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -16,7 +16,7 @@ export default function SignIn() {
   return (
     <div className="relative min-h-screen flex items-center justify-center pt-20 pb-16">
       <ParticleBackground />
-      
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -24,8 +24,12 @@ export default function SignIn() {
                    rounded-2xl shadow-xl border border-white/20"
       >
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold gradient-text mb-2">Welcome Back</h2>
-          <p className="text-gray-600 dark:text-gray-400">Sign in to continue coding</p>
+          <h2 className="text-3xl font-bold gradient-text mb-2">
+            Welcome Back
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Sign in to continue coding
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -71,9 +75,14 @@ export default function SignIn() {
 
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center">
-              <input type="checkbox" className="rounded border-gray-300 text-primary-light 
-                                              focus:ring-primary-light" />
-              <span className="ml-2 text-gray-600 dark:text-gray-400">Remember me</span>
+              <input
+                type="checkbox"
+                className="rounded border-gray-300 text-primary-light 
+                                              focus:ring-primary-light"
+              />
+              <span className="ml-2 text-gray-600 dark:text-gray-400">
+                Remember me
+              </span>
             </label>
             <a href="#" className="text-primary-light hover:text-primary-dark">
               Forgot password?
@@ -92,8 +101,11 @@ export default function SignIn() {
         </form>
 
         <p className="mt-8 text-center text-gray-600 dark:text-gray-400">
-          Don't have an account?{' '}
-          <Link to="/signup" className="text-primary-light hover:text-primary-dark font-medium">
+          Don't have an account?{" "}
+          <Link
+            to="/signup"
+            className="text-primary-light hover:text-primary-dark font-medium"
+          >
             Sign up
           </Link>
         </p>

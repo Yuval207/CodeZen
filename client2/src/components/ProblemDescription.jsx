@@ -1,6 +1,6 @@
-import { motion } from 'framer-motion';
-import MarkdownPreview from '@uiw/react-markdown-preview';
-import { useTheme } from '../hooks/useTheme';
+import { motion } from "framer-motion";
+import MarkdownPreview from "@uiw/react-markdown-preview";
+import { useTheme } from "../hooks/useTheme";
 
 export default function ProblemDescription({ problem }) {
   const { isDarkMode } = useTheme();
@@ -12,14 +12,14 @@ export default function ProblemDescription({ problem }) {
       className="space-y-6"
     >
       <div className="wmde-markdown-var">
-        <MarkdownPreview 
+        <MarkdownPreview
           source={problem.description}
-          style={{ 
-            backgroundColor: 'transparent',
-            color: 'inherit'
+          style={{
+            backgroundColor: "transparent",
+            color: "inherit",
           }}
           wrapperElement={{
-            "data-color-mode": isDarkMode ? "dark" : "light"
+            "data-color-mode": isDarkMode ? "dark" : "light",
           }}
           className="prose dark:prose-invert max-w-none
                      prose-headings:text-gray-900 dark:prose-headings:text-white
