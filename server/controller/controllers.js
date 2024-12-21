@@ -1,6 +1,7 @@
 const problemList = require("../models/problemList");
 // const { exec } = require("child_process");
 const problemDescription = require("../models/problemDescription");
+const startercode = require("../models/starterCode");
 const fs = require("fs");
 const docker_delete = require("../utils/docker_delete");
 const util = require("util");
@@ -287,19 +288,16 @@ const testcase_temp = async (req, res) => {
 
 const getCode = async (req, res) => {
   const id = req.params.id;
-  const problem = await problemDescription.findOne({
-    id: id,
-  });
-  return new Promise((resolve, reject) => {
-    fs.readFile(problem.filepath, "utf8", (err, data) => {
-      if (err) {
-        reject(err);
-        return res.json({ error: err });
-      }
-      resolve(data);
-      return res.json({ data });
+  const language = req.query.language;
+
+  const problem = await startercode
+    .findOne({ id: parseInt(id) })
+    .then((problem) => {
+      return res.json(problem[language]);
+    })
+    .catch((e) => {
+      return res.json("no code for the selected language");
     });
-  });
 };
 
 module.exports = {

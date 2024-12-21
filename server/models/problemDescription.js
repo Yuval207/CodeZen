@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const schema = new mongoose.Schema({
   id: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     required: true,
     ref: "problemList",
   },
