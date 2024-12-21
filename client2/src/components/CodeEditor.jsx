@@ -14,15 +14,21 @@ import ParticleBackground from "./ParticleBackground";
 import { useNavigate } from "react-router-dom";
 import { useTheme } from "../hooks/useTheme";
 import { problems } from "../data/problems";
-import { getProblemList } from "../api/index.js";
+import {
+  getProblemList,
+  getCode,
+  runProgram,
+  getProblemDescription,
+} from "../api/index.js";
 import TestResults from "./TestResults";
 import ProblemDescription from "./ProblemDescription";
 
 export default function CodeEditor() {
   const { id } = useParams();
   const problem = problems.find((p) => p.id === parseInt(id)) || problems[0];
-  const [code, setCode] = useState(problem.starterCode);
-  const [testResults, setTestResults] = useState(null);
+  const [code, setCode] = useState("");
+  const [testResults, setTestResults] = useState("");
+  const [problemData, setProblemData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
@@ -31,38 +37,86 @@ export default function CodeEditor() {
 
   useEffect(() => {
     getProblemList().then((problems) => setProblemTitles(problems));
+    getCode(1, "python").then((code) => setCode(code));
+    getProblemDescription(id).then((problems) => setProblemData(problems));
   }, []);
 
-  const handleEditorChange = (value) => {
+  const handleRunProgram = (user_id) => {
+    runProgram(user_id, code, id)
+      .then((res) => {
+        // setTestResults(res);
+        console.log(res);
+        runTests(res);
+      })
+      .catch((err) => {
+        setTestResults(err);
+        console.log(err);
+      });
+  };
+
+  const handleEditorChange = (value, event) => {
     setCode(value);
   };
 
-  const runTests = () => {
-    setTestResults({
-      passed: 2,
-      failed: 1,
-      results: [
-        {
-          status: "passed",
-          input: "[2,7,11,15], 9",
-          output: "[0,1]",
-          expected: "[0,1]",
-        },
-        {
-          status: "passed",
-          input: "[3,2,4], 6",
-          output: "[1,2]",
-          expected: "[1,2]",
-        },
-        {
-          status: "failed",
-          input: "[3,3], 6",
-          output: "[0,2]",
-          expected: "[0,1]",
-        },
-      ],
-    });
+  const runTests = (testResults) => {
+    console.log(testResults);
 
+    if (
+      testResults.hasOwnProperty("stdout") &&
+      testResults["stdout"] == "correct"
+    ) {
+      let inputArray = [],
+        outputArray = [];
+      problemData.testcase.map((e, idx) => {
+        let input_str = Object.values(e.input)
+          .map((value) =>
+            Array.isArray(value) ? JSON.stringify(value) : value
+          )
+          .join(", ");
+
+        inputArray.push(input_str);
+        let output_str = JSON.stringify(e.output);
+        outputArray.push(output_str);
+      });
+      console.log(inputArray, outputArray);
+
+      setTestResults({
+        passed: inputArray.length, // Assuming all tests passed
+        failed: 0,
+        results: inputArray.map((input, index) => ({
+          status: "passed",
+          input: input,
+          output: outputArray[index],
+          expected: outputArray[index],
+        })),
+      });
+    } else if (
+      testResults.hasOwnProperty("errorType") &&
+      testResults["errorType"] == "Assertion"
+    ) {
+      setTestResults({
+        passed: 0,
+        failed: 1,
+        results: [
+          {
+            status: "failed",
+            input: testResults["testcase"],
+            output: testResults["output"],
+            expected: testResults["expected"],
+          },
+        ],
+      });
+    } else {
+      setTestResults({
+        passed: 0,
+        failed: 1,
+        error: {
+          message: testResults["stdout"],
+        },
+      });
+    }
+
+    // Scroll to the results after a short delay
     setTimeout(() => {
       testResultsRef.current?.scrollIntoView({
         behavior: "smooth",
@@ -98,7 +152,10 @@ export default function CodeEditor() {
 
           <div className="flex items-center space-x-4">
             <button
-              onClick={runTests}
+              // onClick={runTests}
+              onClick={() => {
+                handleRunProgram(101);
+              }}
               className="flex items-center space-x-2 px-4 py-2 rounded-lg
                        bg-primary-light hover:bg-primary-dark text-white
                        transition-colors duration-300"
@@ -197,10 +254,10 @@ export default function CodeEditor() {
               className="space-y-6"
             >
               {/* Code Editor */}
-              <div className="h-[600px] rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 shadow-lg">
+              <div className="h-[600px] rounded-xl overflowProblemDescription-hidden border border-gray-200 dark:border-gray-700 shadow-lg">
                 <Editor
                   height="100%"
-                  defaultLanguage="javascript"
+                  language="python"
                   theme={isDarkMode ? "vs-dark" : "light"}
                   value={code}
                   onChange={handleEditorChange}

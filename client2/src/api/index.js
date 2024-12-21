@@ -15,10 +15,13 @@ export const getProblemDescription = async (id) => {
   return await response.json();
 };
 
-export const getCode = async (id) => {
-  const response = await fetch(`http://localhost:3000/code/${id}`, {
-    method: "GET",
-  });
+export const getCode = async (id, language) => {
+  const response = await fetch(
+    `http://localhost:3000/code/${id}?language=${language}`,
+    {
+      method: "GET",
+    }
+  );
   return await response.json();
 };
 
