@@ -1,68 +1,146 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import ParticleBackground from "./ParticleBackground";
+import { FiMail, FiLock } from "react-icons/fi";
+import { signInUser } from "../api/index.js";
+import { useNavigate } from "react-router-dom";
 
-const Signin = () => {
+export default function SignIn() {
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Validate email and password (basic checks)
+    if (!email || !password) {
+      setError("Please fill out all fields.");
+      return;
+    }
+
+    // Create user data object
+    const userData = {
+      email,
+      password,
+    };
+
+    // Call signinHandler to process the data
+    const loginResponse = await signInUser(userData);
+    console.log(loginResponse);
+
+    if ("token" in loginResponse) {
+      navigate("/problems");
+    }
+    setError(loginResponse.message || "Sign-in failed");
+  };
+
   return (
-    <div className="bg-gray-900 min-h-screen flex justify-center items-center">
-      <div className="bg-gray-800 text-white p-8 rounded-lg shadow-lg w-96">
-        <h1 className="text-4xl font-bold mb-8">Signin</h1>
-        <div className="mb-6 flex items-center">
-          <svg
-            className="h-6 w-6 text-blue-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-            />
-          </svg>
-          <input
-            type="text"
-            className="w-full p-2 bg-gray-800 border-b border-gray-500 text-white focus:outline-none focus:border-blue-500 rounded-md"
-            placeholder="Username"
-          />
+    <div className="relative min-h-screen flex items-center justify-center pt-20 pb-16">
+      <ParticleBackground />
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-md mx-4 px-6 py-8 bg-white/10 dark:bg-white/5 backdrop-blur-lg
+                   rounded-2xl shadow-xl border border-white/20"
+      >
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold gradient-text mb-2">
+            Welcome Back
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            Sign in to continue coding
+          </p>
         </div>
-        <div className="mb-6 flex items-center">
-          <svg
-            className="h-6 w-6 text-blue-500"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            strokeWidth="2"
-            stroke="currentColor"
-            fill="none"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" />
-            <rect x="5" y="11" width="14" height="10" rx="2" />
-            <circle cx="12" cy="16" r="1" />
-            <path d="M8 11v-5a4 4 0 0 1 8 0" />
-          </svg>
-          <input
-            type="password"
-            className="w-full p-2 bg-gray-800 border-b border-gray-500 text-white focus:outline-none focus:border-blue-500 rounded-md"
-            placeholder="Password"
-          />
-        </div>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-2xl w-full">
-          Sign In
-        </button>
-        <p className="mt-8 text-sm text-gray-300">
-          Don't have an account?{" "}
-          <NavLink to={"/signup"}>
-            <a href="#" className="text-blue-500 hover:text-blue-700">
-              Sign up
+
+        {error && (
+          <div className="mb-4 p-3 text-center text-red-600 bg-red-100 rounded-md">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Email Address
+            </label>
+            <div className="relative">
+              <FiMail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600
+                         bg-white/50 dark:bg-white/5 backdrop-blur-sm
+                         focus:ring-2 focus:ring-primary-light focus:border-transparent
+                         text-gray-900 dark:text-white placeholder-gray-500"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Password
+            </label>
+            <div className="relative">
+              <FiLock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600
+                         bg-white/50 dark:bg-white/5 backdrop-blur-sm
+                         focus:ring-2 focus:ring-primary-light focus:border-transparent
+                         text-gray-900 dark:text-white placeholder-gray-500"
+                placeholder="Enter your password"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between text-sm">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                className="rounded border-gray-300 text-primary-light
+                                              focus:ring-primary-light"
+              />
+              <span className="ml-2 text-gray-600 dark:text-gray-400">
+                Remember me
+              </span>
+            </label>
+            <a href="#" className="text-primary-light hover:text-primary-dark">
+              Forgot password?
             </a>
-          </NavLink>
+          </div>
+
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="w-full py-3 px-4 rounded-xl bg-primary-light hover:bg-primary-dark
+                     text-white font-medium transition-colors duration-200
+                     focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light
+                     hover:shadow-lg hover:shadow-primary-light/30"
+          >
+            Sign In
+          </button>
+        </form>
+
+        <p className="mt-8 text-center text-gray-600 dark:text-gray-400">
+          Don't have an account?{" "}
+          <Link
+            to="/signup"
+            className="text-primary-light hover:text-primary-dark font-medium"
+          >
+            Sign up
+          </Link>
         </p>
-      </div>
+      </motion.div>
     </div>
   );
-};
-
-export default Signin;
+}
