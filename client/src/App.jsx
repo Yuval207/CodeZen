@@ -1,48 +1,26 @@
-import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
 import Problems from "./components/Problems";
-import Signin from "./components/Signin";
-import Topbar from "./components/Topbar";
-import Button from "./components/Button";
-import Lottie from "lottie-react";
-import homePageAnimation from "./assets/homePageAnimation.json";
+import CodeEditor from "./components/CodeEditor";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import UserProfile from "./components/UserProfile";
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <Topbar />
-      <div className="flex justify-between min-h-screen mt-10">
-        <div className="md:w-1/2 md:ml-8 ">
-          <Lottie animationData={homePageAnimation} />
-        </div>
-
-        <div className="w-1/2 m-4 h-96 bg-blue-950 mockup-code">
-          <pre data-prefix="$">
-            <code>Unlock Your Coding Potential with CodeZen!</code>
-          </pre>
-          <pre data-prefix=">" className="text-warning">
-            <code>
-              Join a community of passionate coders, sharpen your skills, and
-              conquer coding challenges.
-            </code>
-          </pre>
-          <pre data-prefix=">" className="text-success">
-            <code>
-              Whether you're a beginner or a seasoned developer CodeZen,
-            </code>
-          </pre>
-          <pre data-prefix=">" className="text-success">
-            <code>
-              is your gateway to mastering algorithms and honing your
-              problem-solving prowess.
-            </code>
-          </pre>
-          <pre data-prefix=">" className="text-success">
-            <code>Get ready to level up your coding journey!</code>
-          </pre>
-        </div>
+    <Router>
+      <div className="relative min-h-screen">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Hero />} />
+          <Route path="/problems" element={<Problems />} />
+          <Route path="/problem/:id" element={<CodeEditor />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/profile" element={<UserProfile />} />
+        </Routes>
       </div>
-    </div>
+    </Router>
   );
 }
-
-export default App;
