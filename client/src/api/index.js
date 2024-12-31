@@ -22,9 +22,8 @@ export const getCode = async (id) => {
   return await response.json();
 };
 
-export const runProgram = async (user_id, code, problem_id) => {
+export const runProgram = async (code, problem_id) => {
   const payload = {
-    user_id: user_id,
     code: code,
     problem_id: problem_id,
   };

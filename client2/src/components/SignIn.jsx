@@ -3,14 +3,38 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ParticleBackground from "./ParticleBackground";
 import { FiMail, FiLock } from "react-icons/fi";
+import { signInUser } from "../api/index.js";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle sign in logic here
+
+    // Validate email and password (basic checks)
+    if (!email || !password) {
+      setError("Please fill out all fields.");
+      return;
+    }
+
+    // Create user data object
+    const userData = {
+      email,
+      password,
+    };
+
+    // Call signinHandler to process the data
+    const loginResponse = await signInUser(userData);
+    console.log(loginResponse);
+
+    if ("token" in loginResponse) {
+      navigate("/problems");
+    }
+    setError(loginResponse.message || "Sign-in failed");
   };
 
   return (
@@ -31,6 +55,12 @@ export default function SignIn() {
             Sign in to continue coding
           </p>
         </div>
+
+        {error && (
+          <div className="mb-4 p-3 text-center text-red-600 bg-red-100 rounded-md">
+            {error}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
@@ -77,7 +107,7 @@ export default function SignIn() {
             <label className="flex items-center">
               <input
                 type="checkbox"
-                className="rounded border-gray-300 text-primary-light 
+                className="rounded border-gray-300 text-primary-light
                                               focus:ring-primary-light"
               />
               <span className="ml-2 text-gray-600 dark:text-gray-400">
@@ -91,6 +121,7 @@ export default function SignIn() {
 
           <button
             type="submit"
+            onClick={handleSubmit}
             className="w-full py-3 px-4 rounded-xl bg-primary-light hover:bg-primary-dark
                      text-white font-medium transition-colors duration-200
                      focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-light

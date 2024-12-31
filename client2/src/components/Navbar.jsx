@@ -1,19 +1,20 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ThemeToggle from "./ThemeToggle";
+import UserDropdown from "./UserDropdown";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMenu, FiX } from "react-icons/fi";
 
-export default function Navbar() {
+export default function Navbar({ user }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const token = localStorage.getItem("authToken");
 
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Problems", path: "/problems" },
-    { name: "Learn", path: "#" },
-    { name: "Contest", path: "#" },
+    { name: "About", path: "#" },
   ];
 
   return (
@@ -55,16 +56,18 @@ export default function Navbar() {
               </motion.div>
             ))}
             <ThemeToggle />
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/signin")}
-              className="bg-primary-light hover:bg-primary-dark text-white px-6 py-2 rounded-xl
-                        font-semibold transition-colors duration-300
-                        hover:ring-4 hover:ring-primary-light/30"
-            >
-              Sign In
-            </motion.button>
+            {token ? (
+              <UserDropdown />
+            ) : (
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate("/signin")}
+                className="bg-primary-light hover:bg-primary-dark text-white px-6 py-2 rounded-xl font-semibold transition-colors duration-300 hover:ring-4 hover:ring-primary-light/30"
+              >
+                Sign In
+              </motion.button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -102,16 +105,6 @@ export default function Navbar() {
                   {item.name}
                 </Link>
               ))}
-              <button
-                className="w-full bg-primary-light hover:bg-primary-dark text-white px-6 py-2 rounded-xl
-                          font-semibold transition-colors duration-300"
-                onClick={() => {
-                  navigate("/signin");
-                  setIsMenuOpen(false);
-                }}
-              >
-                Sign In
-              </button>
             </div>
           </motion.div>
         )}

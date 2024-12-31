@@ -28,8 +28,17 @@ export default function Problems() {
   const [problems, setProblems] = useState([]);
 
   useEffect(() => {
-    getProblemList().then((problems) => setProblems(problems));
-  }, []);
+    // Check if the auth token exists in localStorage
+    const token = localStorage.getItem("authToken");
+
+    if (!token) {
+      // If no token, redirect to signin page
+      navigate("/signin");
+    } else {
+      // If token exists, fetch problems
+      getProblemList().then((problems) => setProblems(problems));
+    }
+  }, [navigate]);
 
   const handleProblemClick = (problemId) => {
     navigate(`/problem/${problemId}`);

@@ -4,6 +4,7 @@ import ParticleBackground from "./ParticleBackground";
 import FloatingCube from "./FloatingCube";
 import FeatureCard from "./FeatureCard";
 import { FiCode, FiBookmark, FiLayers } from "react-icons/fi";
+import { NavLink } from "react-router-dom";
 
 export default function Hero() {
   const [ref, inView] = useInView({
@@ -90,18 +91,20 @@ export default function Hero() {
           </motion.p>
 
           <motion.div variants={itemVariants} className="mb-24">
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 0 25px rgba(100, 108, 255, 0.5)",
-              }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-primary-light px-8 py-4 rounded-xl text-white font-bold text-xl
+            <NavLink to="/problems">
+              <motion.button
+                whileHover={{
+                  scale: 1.05,
+                  boxShadow: "0 0 25px rgba(100, 108, 255, 0.5)",
+                }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-primary-light px-8 py-4 rounded-xl text-white font-bold text-xl
                         transform transition-all duration-300 hover:bg-primary-dark
                         hover:ring-4 hover:ring-primary-light/30"
-            >
-              Start Coding Now
-            </motion.button>
+              >
+                Start Coding Now
+              </motion.button>
+            </NavLink>
           </motion.div>
 
           <motion.div

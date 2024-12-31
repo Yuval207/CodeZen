@@ -16,8 +16,8 @@ const EditorPage = () => {
     setLanguage(e.target.value);
   };
 
-  const handleRunProgram = (user_id) => {
-    runProgram(user_id, code, problem_id)
+  const handleRunProgram = () => {
+    runProgram(code, problem_id)
       .then((res) => {
         setResult(res);
         console.log(res);
@@ -64,7 +64,7 @@ const EditorPage = () => {
         </select>
         <button
           onClick={() => {
-            handleRunProgram(101);
+            handleRunProgram();
           }}
         >
           Run

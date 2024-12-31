@@ -19,6 +19,6 @@ const schema = new mongoose.Schema({
   },
 });
 
-const starterCode = mongoose.model("templatecode", schema);
+const starterCode = mongoose.model("starter_code", schema);
 
 module.exports = starterCode;

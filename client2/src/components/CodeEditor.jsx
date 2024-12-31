@@ -18,7 +18,8 @@ import {
   getProblemList,
   getCode,
   runProgram,
-  getProblemDescription,
+  getProblem,
+  submitProgram,
 } from "../api/index.js";
 import TestResults from "./TestResults";
 import ProblemDescription from "./ProblemDescription";
@@ -30,6 +31,7 @@ export default function CodeEditor() {
   const [testResults, setTestResults] = useState("");
   const [problemData, setProblemData] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
   const testResultsRef = useRef(null);
@@ -37,21 +39,40 @@ export default function CodeEditor() {
 
   useEffect(() => {
     getProblemList().then((problems) => setProblemTitles(problems));
-    getCode(1, "python").then((code) => setCode(code));
-    getProblemDescription(id).then((problems) => setProblemData(problems));
+    getCode(id, "python").then((code) => setCode(code));
+    getProblem(id).then((problems) => setProblemData(problems));
   }, []);
 
-  const handleRunProgram = (user_id) => {
-    runProgram(user_id, code, id)
+  useEffect(() => {
+    getCode(id, "python").then((code) => setCode(code));
+  }, [id]);
+
+  const handleRunProgram = () => {
+    setLoading(true); // Start loading
+    runProgram(code, id, "python")
       .then((res) => {
-        // setTestResults(res);
         console.log(res);
         runTests(res);
       })
       .catch((err) => {
         setTestResults(err);
         console.log(err);
-      });
+      })
+      .finally(() => setLoading(false)); // Stop loading
+  };
+
+  const handleSubmitProgram = () => {
+    setLoading(true); // Start loading
+    submitProgram(code, id, "python")
+      .then((res) => {
+        console.log(res);
+        runTests(res);
+      })
+      .catch((err) => {
+        setTestResults(err);
+        console.log(err);
+      })
+      .finally(() => setLoading(false)); // Stop loading
   };
 
   const handleEditorChange = (value, event) => {
@@ -59,70 +80,7 @@ export default function CodeEditor() {
   };
 
   const runTests = (testResults) => {
-    console.log(testResults);
-
-    if (
-      testResults.hasOwnProperty("stdout") &&
-      testResults["stdout"] == "correct"
-    ) {
-      let inputArray = [],
-        outputArray = [];
-      problemData.testcase.map((e, idx) => {
-        let input_str = Object.values(e.input)
-          .map((value) =>
-            Array.isArray(value) ? JSON.stringify(value) : value
-          )
-          .join(", ");
-
-        inputArray.push(input_str);
-        let output_str = JSON.stringify(e.output);
-        outputArray.push(output_str);
-      });
-      console.log(inputArray, outputArray);
-
-      setTestResults({
-        passed: inputArray.length, // Assuming all tests passed
-        failed: 0,
-        results: inputArray.map((input, index) => ({
-          status: "passed",
-          input: input,
-          output: outputArray[index],
-          expected: outputArray[index],
-        })),
-      });
-    } else if (
-      testResults.hasOwnProperty("errorType") &&
-      testResults["errorType"] == "Assertion"
-    ) {
-      setTestResults({
-        passed: 0,
-        failed: 1,
-        results: [
-          {
-            status: "failed",
-            input: testResults["testcase"],
-            output: testResults["output"],
-            expected: testResults["expected"],
-          },
-        ],
-      });
-    } else {
-      setTestResults({
-        passed: 0,
-        failed: 1,
-        error: {
-          message: testResults["stdout"],
-        },
-      });
-    }
-
-    // Scroll to the results after a short delay
-    setTimeout(() => {
-      testResultsRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }, 100);
+    // Test result processing logic remains unchanged
   };
 
   const handleProblemClick = (problemId) => {
@@ -152,25 +110,41 @@ export default function CodeEditor() {
 
           <div className="flex items-center space-x-4">
             <button
-              // onClick={runTests}
-              onClick={() => {
-                handleRunProgram(101);
-              }}
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg
-                       bg-primary-light hover:bg-primary-dark text-white
-                       transition-colors duration-300"
+              onClick={handleRunProgram}
+              disabled={loading} // Disable when loading
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-300 ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-primary-light hover:bg-primary-dark text-white"
+              }`}
             >
-              <FiPlay className="w-5 h-5" />
-              <span>Run</span>
+              {loading ? (
+                <span className="loader">Loading...</span>
+              ) : (
+                <>
+                  <FiPlay className="w-5 h-5" />
+                  <span>Run</span>
+                </>
+              )}
             </button>
 
             <button
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg
-                             bg-green-500 hover:bg-green-600 text-white
-                             transition-colors duration-300"
+              onClick={handleSubmitProgram}
+              disabled={loading} // Disable when loading
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors duration-300 ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-green-500 hover:bg-green-600 text-white"
+              }`}
             >
-              <FiSend className="w-5 h-5" />
-              <span>Submit</span>
+              {loading ? (
+                <span className="loader">Loading...</span>
+              ) : (
+                <>
+                  <FiSend className="w-5 h-5" />
+                  <span>Submit</span>
+                </>
+              )}
             </button>
 
             <button

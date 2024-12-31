@@ -23,6 +23,10 @@ const schema = new mongoose.Schema({
     enum: ["Easy", "Medium", "Hard"],
     required: true,
   },
+  testcase: {
+    type: Array,
+    default: [],
+  },
 });
 
 const db = mongoose.model("problemList", schema);

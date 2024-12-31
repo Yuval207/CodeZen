@@ -21,7 +21,7 @@ class TestTwoSum(unittest.TestCase):
                 target = test_case["input"]["target"]
                 expected = test_case["output"]["expected"]
 
-                result=solution.solution(nums, target)
+                result=solution.two_sum(nums, target)
                 if (type(result)==list):
                     result=sorted(result)
                 self.assertEqual(result, sorted(expected), "case=>"+str(nums)+" expected=>"+ str(expected)+" Output=>"+str(result)+"!!!!!")

@@ -1,10 +1,11 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Problems from './components/Problems';
-import CodeEditor from './components/CodeEditor';
-import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import Problems from "./components/Problems";
+import CodeEditor from "./components/CodeEditor";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import UserProfile from "./components/UserProfile";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
           <Route path="/problem/:id" element={<CodeEditor />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/profile" element={<UserProfile />} />
         </Routes>
       </div>
     </Router>
