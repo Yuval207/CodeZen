@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import ParticleBackground from "./ParticleBackground";
+import ParticleBackground from "./ParticleBackground.jsx";
 import { FiUser, FiMail, FiLock } from "react-icons/fi";
 import { signupUser } from "../api/index.js";
 

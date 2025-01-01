@@ -3,8 +3,8 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Problems from "./components/Problems";
 import CodeEditor from "./components/CodeEditor";
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
+import SignIn from "./components/Signin";
+import SignUp from "./components/Signup";
 import UserProfile from "./components/UserProfile";
 
 export default function App() {
