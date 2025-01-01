@@ -29,7 +29,6 @@ export default function SignIn() {
 
     // Call signinHandler to process the data
     const loginResponse = await signInUser(userData);
-    console.log(loginResponse);
 
     if ("token" in loginResponse) {
       navigate("/problems");

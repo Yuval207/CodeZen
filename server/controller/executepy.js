@@ -33,8 +33,6 @@ async function executePy(req, res) {
   const testcase_filePath = path.join(baseDir, "solution", "testcases.json");
 
   try {
-    console.log("Starting execution process");
-
     // Copy test file
     const testCode = await fs.promises.readFile(sourceFilePath, "utf8");
     await fs.promises.writeFile(destinationFilePath, testCode);
@@ -47,24 +45,18 @@ async function executePy(req, res) {
     const problemData = await problemList.findOne({ id: problem_id });
     const testcases = JSON.stringify(problemData.testcase);
     await fs.promises.writeFile(testcase_filePath, testcases);
-    console.log("Files prepared successfully");
 
     try {
       // Ensure any existing container is removed
       try {
         await execPromise(`docker rm -f coderunner_${user_id}`);
-        console.log(`Removed existing container for user ${user_id}`);
       } catch (cleanupError) {
         // Ignore errors if container doesn't exist
-        console.log("No existing container to clean up");
       }
 
       // Create the Docker container with unbuffered Python output
       await execPromise(
         `docker create --name coderunner_${user_id} -e PYTHONUNBUFFERED=1 codezen_python`
-      );
-      console.log(
-        `Docker container coderunner_${user_id} created successfully`
       );
 
       // Copy files into the container
@@ -77,33 +69,19 @@ async function executePy(req, res) {
       await execPromise(
         `docker cp ${testcase_filePath} coderunner_${user_id}:/code/testcases.json`
       );
-      console.log("All files copied to container");
 
       // Start the Docker container and wait for it to complete
       await execPromise(`docker start --attach coderunner_${user_id}`);
-      console.log("Container execution completed");
 
       // Fetch both stdout and stderr logs
       const { stdout, stderr } = await execPromise(
         `docker logs coderunner_${user_id}`
       );
-      console.log("Docker stdout:", stdout);
-      console.log("Docker stderr:", stderr);
-
-      // // Check container status if no logs
-      // if (!stdout && !stderr) {
-      //   const { stdout: status } = await execPromise(
-      //     `docker inspect -f '{{.State.Status}}' coderunner_${user_id}`
-      //   );
-      //   console.log("Container status:", status);
-      // }
 
       const logs = stdout || stderr;
 
       // Process logs and handle results
       if (logs) {
-        console.log("Processing logs:", logs);
-
         if (logs.startsWith(".\n--")) {
           if (mode === "submit") {
             await saveSubmission(req, problem_id, language, code, "Accepted");
@@ -145,13 +123,11 @@ async function executePy(req, res) {
           .status(301)
           .json({ success: false, errorType: "other", stdout: errorDetails });
       } else {
-        console.log("No logs received from container");
         return res
           .status(500)
           .json({ success: false, error: "No output from container" });
       }
     } catch (error) {
-      console.log("error in run: \n\n\n", error.message);
       if (error.message.includes("Test case exceeded time limit")) {
         return res
           .status(301)
@@ -225,8 +201,6 @@ async function executePy(req, res) {
           ? `line ${adjustedLineNumber}\n${relevantLines}`
           : relevantLines;
 
-        console.log(message);
-
         if (mode === "submit") {
           await saveSubmission(
             req,
@@ -245,7 +219,6 @@ async function executePy(req, res) {
       // Cleanup container
       try {
         await execPromise(`docker rm -f coderunner_${user_id}`);
-        console.log(`Cleaned up container coderunner_${user_id}`);
       } catch (cleanupError) {
         console.error("Container cleanup error:", cleanupError);
       }
@@ -290,18 +263,14 @@ async function saveSubmission(req, problem_id, language, code, status) {
 
   if (existingSubmissionIndex === -1) {
     if (newSubmission.Difficulty === "Easy") {
-      console.log("easy he");
       user.difficulty.easy += 1;
     } else if (newSubmission.Difficulty === "Medium") {
-      console.log("medium he");
       user.difficulty.medium += 1;
     } else if (newSubmission.Difficulty === "Hard") {
-      console.log("difficult he");
       user.difficulty.hard += 1;
     } else {
-      console.log(newSubmission.Difficulty);
     }
-    console.log("After update:", user.difficulty);
+
     // Mark the difficulty field as modified
     user.markModified("difficulty");
   }

@@ -15,13 +15,9 @@ import { useEffect, useState } from "react";
 
 export default function UserProfile() {
   const [userData, setUserData] = useState({});
-  // console.log(userData);
 
   useEffect(() => {
-    console.log("lauda");
-
     getUserData().then((userdata) => setUserData(userdata));
-    console.log("print ho rha he?", userData);
   }, []);
 
   return (

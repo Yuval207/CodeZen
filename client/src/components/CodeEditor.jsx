@@ -49,26 +49,20 @@ export default function CodeEditor() {
   const handleRunProgram = () => {
     runProgram(code, id, "python")
       .then((res) => {
-        // setTestResults(res);
-        console.log(res);
         runTests(res);
       })
       .catch((err) => {
         setTestResults(err);
-        console.log(err);
       });
   };
 
   const handleSubmitProgram = () => {
     submitProgram(code, id, "python")
       .then((res) => {
-        // setTestResults(res);
-        console.log(res);
         runTests(res);
       })
       .catch((err) => {
         setTestResults(err);
-        console.log(err);
       });
   };
 
@@ -77,8 +71,6 @@ export default function CodeEditor() {
   };
 
   const runTests = (testResults) => {
-    console.log(testResults);
-
     if (
       testResults.hasOwnProperty("stdout") &&
       testResults["stdout"] == "correct"
@@ -96,7 +88,6 @@ export default function CodeEditor() {
         let output_str = JSON.stringify(e.output);
         outputArray.push(output_str);
       });
-      console.log(inputArray, outputArray);
 
       setTestResults({
         passed: inputArray.length, // Assuming all tests passed

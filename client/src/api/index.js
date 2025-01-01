@@ -1,24 +1,16 @@
+const apiEndpoint = import.meta.env.VITE_API_ENDPOINT;
+
 export const getProblemList = async () => {
-  const response = await fetch("http://localhost:3000/problemlist", {
+  const response = await fetch(`${apiEndpoint}/problemlist`, {
     method: "GET",
   });
   return await response.json();
 };
 
 export const getProblem = async (id) => {
-  const response = await fetch(`http://localhost:3000/problem/${id}`, {
+  const response = await fetch(`${apiEndpoint}/problem/${id}`, {
     method: "GET",
   });
-  return await response.json();
-};
-
-export const getProblemDescription = async (id) => {
-  const response = await fetch(
-    `http://localhost:3000/problemdescription/${id}`,
-    {
-      method: "GET",
-    }
-  );
   return await response.json();
 };
 
@@ -29,7 +21,7 @@ export const getCode = async (id, language) => {
     throw new Error("No token found. Please log in.");
   }
   const response = await fetch(
-    `http://localhost:3000/code/${id}?language=${language}`,
+    `${apiEndpoint}/code/${id}?language=${language}`,
     {
       method: "GET",
       headers: {
@@ -54,7 +46,7 @@ export const runProgram = async (code, problem_id, language) => {
     mode: "run",
     language: language,
   };
-  const response = await fetch(`http://localhost:3000/runprogrampy`, {
+  const response = await fetch(`${apiEndpoint}/runprogrampy`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -78,7 +70,7 @@ export const submitProgram = async (code, problem_id, language) => {
     mode: "submit",
     language: language,
   };
-  const response = await fetch(`http://localhost:3000/runprogrampy`, {
+  const response = await fetch(`${apiEndpoint}/runprogrampy`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -90,20 +82,18 @@ export const submitProgram = async (code, problem_id, language) => {
 };
 
 export const signupUser = async (userData) => {
-  const response = await fetch("http://localhost:3000/signup", {
+  const response = await fetch(`${apiEndpoint}/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(userData), // Pass the user data as the request body
+    body: JSON.stringify(userData),
   });
   return await response.json();
 };
 
 export const signInUser = async (userData) => {
-  console.log("signin started");
-
-  const response = await fetch("http://localhost:3000/signin", {
+  const response = await fetch(`${apiEndpoint}/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -128,7 +118,7 @@ export const getUserData = async () => {
     throw new Error("No token found. Please log in.");
   }
 
-  const response = await fetch("http://localhost:3000/user", {
+  const response = await fetch(`${apiEndpoint}/user`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

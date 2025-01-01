@@ -17,8 +17,6 @@ export default function SignUp() {
       const response = await signupUser(userData);
 
       if (response.success) {
-        console.log("User signed up successfully:", response);
-
         navigate("/problems");
       } else {
         console.error("Signup failed:", response.message || "Unknown error");

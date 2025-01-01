@@ -18,4 +18,4 @@ def reverse_integer(x: int) -> int:
                 return 0
             reversed_x = reversed_x * 10 + pop
         
-        return sign * reverse_x
+        return sign * reversed_x
